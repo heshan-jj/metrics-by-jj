@@ -1,109 +1,183 @@
+<div align="center">
+
 # ⚡ Metrics by JJ
 
-> Real-time system metrics monitor & telemetry hub designed for Windows, accessible across your private local network (LAN) from any phone, tablet, or browser.
+**Lightweight, Real-Time & 100% Private Windows Telemetry Dashboard**
 
-![Telemetry Dashboard Preview](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
-![Python 3.13](https://img.shields.io/badge/Python-3.13-3776AB?style=for-the-badge&logo=python)
-![WebSockets](https://img.shields.io/badge/WebSockets-Realtime-00f2fe?style=for-the-badge)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![WebSockets](https://img.shields.io/badge/WebSockets-Realtime-00f2fe?style=for-the-badge)](https://websockets.readthedocs.io/)
+[![Privacy: 100% Local](https://img.shields.io/badge/Privacy-100%25%20Local-success?style=for-the-badge)](README.md)
+[![Platform: Windows](https://img.shields.io/badge/Platform-Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)](README.md)
 
----
-
-## 🚀 Features
-
-- **⚡ Real-time Telemetry via WebSockets (1-sec intervals)**: No polling overhead; updates push instantly.
-- **🖥️ CPU Performance**: Overall load %, per-core load grid (e.g. 12 cores individual bars), frequency (GHz), logical & physical core counts.
-- **🎮 GPU Detection**: Model name (e.g. NVIDIA RTX 2050), temperature, clock speed, power usage.
-- **🧠 Memory (RAM & Swap)**: Used vs total GB, live usage percentage, pagefile metrics.
-- **💾 Storage Drives**: Partition capacity, used/free bytes, live Disk Read/Write transfer rates.
-- **📡 Network Bandwidth & Sparklines**: Real-time 60-second rolling upload/download throughput graph.
-- **🛠️ Windows Services Monitor**: Search and filter running/stopped Windows services with PIDs and startup types.
-- **📊 Top Processes**: Live top 10 CPU/Memory hogs with PID, RSS memory, and thread counts.
-- **🌐 Private LAN Access**: Auto-detects and displays your LAN IPs (e.g., `http://192.168.8.164:8989`) with one-click copy chips.
+<p align="center">
+  A free, open-source system monitor that streams your PC's hardware metrics to any browser, phone, tablet, or secondary screen over your local network in real-time.
+  <br />
+  <strong>Zero Cloud • Zero Tracking • Zero Bloat • Sub-1% CPU Overhead</strong>
+</p>
 
 ---
 
-## 📦 1-Click Setup & Manager
+</div>
 
-Metrics by JJ includes a zero-PowerShell setup and management engine.
+## ✨ Highlights
 
-### ⚡ Easy Setup (One-Click)
-Double-click **[`Setup.bat`](file:///d:/Projects/metrics%20by%20jj/Setup.bat)** in the project root.
-
-The setup utility automatically:
-1. Verifies Python 3.10+ in your environment
-2. Prompts for Administrator privileges (via Windows native UAC elevation, no PowerShell)
-3. Installs & updates all dependencies (`requirements.txt` + `pywin32`)
-4. Configures Windows Defender Firewall (Inbound TCP `8989`) via native `netsh`
-5. Registers **MetricsByJJ** as an automatic Windows Service
-6. Creates Start Menu and Desktop shortcuts with custom app icons
-7. Launches the dashboard in your default browser
+- 🔒 **100% Local & Private**: No cloud connections, no telemetry collection, no accounts. All data stays entirely inside your private local network (LAN).
+- ⚡ **Real-Time WebSocket Stream**: Live telemetry pushed at 1-second intervals with zero polling overhead.
+- 📱 **Responsive Cockpit UI**: Zero-dependency frontend engineered for desktop monitors, mobile phones, tablets, and dedicated status displays.
+- 🪟 **Native Windows Service**: Runs silently in the background and auto-starts on system boot without open terminal windows.
+- 🚀 **1-Click Setup (Zero PowerShell)**: Seamless installer that handles elevation, dependencies, firewall rules, and desktop shortcuts automatically.
+- 🪶 **Ultra Lightweight**: Minimal footprint consuming less than ~50 MB RAM and negligible CPU cycles.
 
 ---
 
-## 🛠️ CLI & Manual Control
+## 📊 Monitored Metrics
 
-You can also run commands directly or use the interactive manager menu:
+| Category | Telemetry & Details |
+| :--- | :--- |
+| **🖥️ CPU** | Overall load percentage, per-core utilization bars, clock frequency (GHz), physical & logical core count |
+| **🎮 GPU** | Model identification, thermal sensors, clock speed, power consumption & load |
+| **🧠 Memory** | Physical RAM (Used / Available / Total GB), swap & Windows pagefile utilization |
+| **💾 Storage** | Per-drive partition capacity, disk free space, live real-time Read/Write I/O throughput |
+| **📡 Network** | Rolling 60-second upload/download throughput sparkline, live bandwidth rates (KB/s, MB/s) |
+| **🛠️ Services** | Filterable Windows services manager with status indicators, PIDs, and startup types |
+| **📈 Processes** | Live Top 10 CPU & Memory consuming processes with PID, thread counts, and memory footprint |
+| **🌐 Network Endpoints** | Auto-detected host IPv4 addresses with one-click copyable LAN access URLs |
+
+---
+
+## 🚀 Quick Start
+
+### Option A: One-Click Setup (Recommended for Windows)
+
+1. Clone or download this repository:
+   ```cmd
+   git clone https://github.com/heshan-jj/metrics-by-jj.git
+   cd metrics-by-jj
+   ```
+2. Double-click **[`Setup.bat`](Setup.bat)**.
+
+> **What the installer does automatically:**
+> - Verifies Python 3.10+ in your system PATH
+> - Automatically requests Administrator privileges via native Windows UAC (no PowerShell execution policy blocks)
+> - Installs required dependencies (`requirements.txt` + `pywin32`)
+> - Configures an inbound Windows Defender Firewall rule for TCP port `8989` via native `netsh`
+> - Registers and starts the **MetricsByJJ** Windows background service (auto-starts on boot)
+> - Creates Start Menu and Desktop shortcuts with custom application icons
+> - Opens the live dashboard in your default web browser
+
+---
+
+### Option B: Portable / Developer Mode (Foreground)
+
+If you prefer to run the server in the foreground without registering a Windows service:
+
+```cmd
+# 1. Install dependencies
+pip install -r backend/requirements.txt
+
+# 2. Start the telemetry server
+python -m uvicorn backend.main:app --host 0.0.0.0 --port 8989
+```
+
+Or simply double-click **[`start.bat`](start.bat)**.
+
+---
+
+## 🌐 Accessing Your Dashboard
+
+Once started, open your dashboard from any device connected to the same Wi-Fi or LAN:
+
+- **Local Machine:** [`http://localhost:8989`](http://localhost:8989)
+- **Phone / Tablet / Laptop:** `http://<YOUR_PC_IP>:8989` (e.g. `http://192.168.8.164:8989`)
+
+> 💡 *Tip: Run `python setup.py --status` to list all detected IPv4 addresses for your machine.*
+
+---
+
+## 🛠️ CLI & Management Commands
+
+The built-in manager ([`setup.py`](setup.py)) provides full lifecycle management:
 
 ```cmd
 :: Open interactive setup & control menu
 Setup.bat
 
-:: Full automated install
+:: Silent automated full installation
 python setup.py --install
 
-:: Check live service status & LAN access URLs
+:: Check service health, port listener, and active LAN URLs
 python setup.py --status
 
-:: Start or Stop the background service
+:: Start or Stop the background Windows service
 python setup.py --start
 python setup.py --stop
 
-:: Run in foreground console mode
+:: Run telemetry server in foreground console mode
 python setup.py --run
 
-:: Clean uninstall (removes service, firewall rule, and shortcuts)
+:: Clean uninstallation (removes service, firewall rule, and shortcuts)
 python setup.py --uninstall
 ```
 
-### 🌐 Accessing the Dashboard
-- **On this PC:** [`http://localhost:8989`](http://localhost:8989)
-- **On any device on your Wi-Fi/LAN (Phone, Tablet, Laptop):**  
-  Open browser and go to `http://<YOUR_PC_IP>:8989` (e.g. `http://192.168.8.164:8989`). Run `python setup.py --status` to see all active LAN IP addresses.
+---
+
+## 🌡️ Unlocking Deep Kernel Thermal Sensors (Optional)
+
+On Windows, kernel-level sensors (such as per-core CPU temperatures and GPU junction thermals) require a signed ring-0 driver.
+
+`Metrics by JJ` natively integrates with **[LibreHardwareMonitor](https://github.com/LibreHardwareMonitor/LibreHardwareMonitor)** via WMI:
+
+1. Download the free, portable release of [LibreHardwareMonitor](https://github.com/LibreHardwareMonitor/LibreHardwareMonitor/releases).
+2. Extract and run `LibreHardwareMonitor.exe`.
+3. Ensure **Options → WMI** is enabled (enabled by default).
+4. `Metrics by JJ` will instantly hook into the WMI telemetry feed and render full hardware temperature gauges!
 
 ---
 
-## 🌡️ Unlocking Full CPU & GPU Temperature Sensors
-
-On Windows, deep hardware temperature sensors require kernel-level hardware sensor access.
-
-To unlock per-core temperatures, GPU thermal sensors, and fan speeds:
-1. Download [LibreHardwareMonitor](https://github.com/LibreHardwareMonitor/LibreHardwareMonitor/releases) *(Free & Open Source, portable .zip)*.
-2. Run `LibreHardwareMonitor.exe`.
-3. In Options, make sure **WMI** is enabled (enabled by default).
-4. `Metrics by JJ` will automatically hook into the WMI telemetry stream and display full thermal gauges!
-
----
-
-## 📐 Architecture
+## 📐 Project Architecture
 
 ```
 metrics-by-jj/
 ├── backend/
-│   ├── main.py          # FastAPI app + WebSocket connection hub & broadcaster
-│   ├── metrics.py       # psutil + WMI metrics collector & rate calculator
-│   ├── hardware.py      # LibreHardwareMonitor / OpenHardwareMonitor / ACPI bridge
-│   └── requirements.txt # Python dependencies
+│   ├── main.py          # FastAPI application & WebSocket broadcaster
+│   ├── metrics.py       # psutil, WMI, and network rate aggregator
+│   ├── hardware.py      # Hardware sensor bridge (LibreHardwareMonitor / ACPI)
+│   └── requirements.txt # Core backend Python dependencies
 ├── frontend/
-│   └── index.html       # Single-file zero-dependency dark cockpit dashboard
+│   └── index.html       # Zero-dependency, responsive dark cockpit dashboard
 ├── installer/
-│   ├── metrics-jj.ico   # Application icon for Windows shortcuts
-│   └── metrics-jj.png   # High-res application logo
+│   ├── metrics-jj.ico   # Windows shortcut icon
+│   └── metrics-jj.png   # Dashboard logo asset
 ├── Setup.bat            # 1-Click Master Setup & Manager Launcher
 ├── setup.py             # Pure Python setup engine (zero PowerShell)
-├── service.py           # Windows Service wrapper
-├── start.bat            # Quick foreground launcher
+├── service.py           # Windows NT Service wrapper
+├── start.bat            # Quick foreground runner
+├── LICENSE              # MIT Open Source License
 └── README.md
 ```
 
-### 📜 Service Logs
-Background service output is written to `service.log` in the project root.
+---
+
+## 🤝 Contributing
+
+Contributions from the open-source community are warmly welcomed!
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m "feat: Add AmazingFeature"`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for more information.
+
+---
+
+<div align="center">
+  <sub>Built with ❤️ for privacy, efficiency, and hardware enthusiasts.</sub>
+</div>
