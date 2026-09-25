@@ -1142,7 +1142,7 @@
         <span class="notion-tag tag-orange" id="meta-primary-ip" style="cursor:pointer;" onclick="copyPrimaryUrl()" title="Click to copy">127.0.0.1</span>
         <span class="info-bar-sep" style="margin-left:auto;">LAN:</span>
         <div id="lan-chips" style="display:flex;gap:0.4rem;flex-wrap:wrap;">
-          <button class="lan-pill-btn" onclick="copyText(window.location.origin)">localhost:8989</button>
+          <button class="lan-pill-btn" onclick="copyText(window.location.origin)">localhost:9090</button>
         </div>
       </div>
 
@@ -1856,7 +1856,7 @@
       const container = document.getElementById('lan-chips');
       if (!container || !system.all_ips) return;
 
-      const port = window.location.port || '8989';
+      const port = window.location.port || '9090';
       const chips = [];
 
       if (system.primary_ip && system.primary_ip !== '127.0.0.1') {
@@ -2008,7 +2008,7 @@
 
     function connectWebSocket() {
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const host = window.location.host || 'localhost:8989';
+      const host = window.location.host || 'localhost:9090';
       const wsUrl = `${protocol}//${host}/ws`;
 
       ws = new WebSocket(wsUrl);

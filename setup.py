@@ -39,7 +39,7 @@ ICON_FILE = INSTALLER_DIR / "metrics-jj.ico"
 LOG_FILE = ROOT_DIR / "service.log"
 SERVICE_NAME = "MetricsByJJ"
 SERVICE_DISPLAY = "Metrics by JJ"
-PORT = 8989
+PORT = 9090
 
 # Color formatting for terminal
 class Colors:

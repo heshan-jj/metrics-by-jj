@@ -33,7 +33,7 @@ except ImportError:
 SERVICE_NAME    = "MetricsByJJ"
 SERVICE_DISPLAY = "Metrics by JJ"
 SERVICE_DESC    = "Real-time hardware and system telemetry server."
-PORT            = 8989
+PORT            = 9090
 LOG_FILE        = BASE_DIR / "service.log"
 
 logging.basicConfig(

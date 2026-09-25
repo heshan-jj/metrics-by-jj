@@ -62,7 +62,7 @@
 > - Verifies Python 3.10+ in your system PATH
 > - Automatically requests Administrator privileges via native Windows UAC (no PowerShell execution policy blocks)
 > - Installs required dependencies (`requirements.txt` + `pywin32`)
-> - Configures an inbound Windows Defender Firewall rule for TCP port `8989` via native `netsh`
+> - Configures an inbound Windows Defender Firewall rule for TCP port `9090` via native `netsh`
 > - Registers and starts the **MetricsByJJ** Windows background service (auto-starts on boot)
 > - Creates Start Menu and Desktop shortcuts with custom application icons
 > - Opens the live dashboard in your default web browser
@@ -78,7 +78,7 @@ If you prefer to run the server in the foreground without registering a Windows 
 pip install -r backend/requirements.txt
 
 # 2. Start the telemetry server
-python -m uvicorn backend.main:app --host 0.0.0.0 --port 8989
+python -m uvicorn backend.main:app --host 0.0.0.0 --port 9090
 ```
 
 Or simply double-click **[`start.bat`](start.bat)**.
@@ -89,8 +89,8 @@ Or simply double-click **[`start.bat`](start.bat)**.
 
 Once started, open your dashboard from any device connected to the same Wi-Fi or LAN:
 
-- **Local Machine:** [`http://localhost:8989`](http://localhost:8989)
-- **Phone / Tablet / Laptop:** `http://<YOUR_PC_IP>:8989` (e.g. `http://192.168.8.164:8989`)
+- **Local Machine:** [`http://localhost:9090`](http://localhost:9090)
+- **Phone / Tablet / Laptop:** `http://<YOUR_PC_IP>:9090` (e.g. `http://192.168.8.164:9090`)
 
 > 💡 *Tip: Run `python setup.py --status` to list all detected IPv4 addresses for your machine.*
 
