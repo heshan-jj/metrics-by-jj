@@ -1,0 +1,2000 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Metrics by JJ · System Telemetry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* =========================================
+       NOTION DESIGN SYSTEM - CSS VARIABLES
+       ========================================= */
+    :root {
+      /* Notion Light Mode */
+      --bg-canvas: #ffffff;
+      --bg-sidebar: #f7f6f3;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f1f1ef;
+      --bg-subtle: #f7f6f3;
+      --bg-active: #ebebeb;
+      --bg-input: #ffffff;
+      
+      --border-main: #e9e9e8;
+      --border-subtle: #f0f0ee;
+      --border-dark: #d3d3d2;
+      
+      --text-main: #37352f;
+      --text-secondary: #787774;
+      --text-muted: #9b9a97;
+      --text-faint: #c4c3c0;
+
+      /* Notion Signature Tag Colors (Light) */
+      --tag-gray-bg: #f1f1ef;      --tag-gray-text: #5a5751;
+      --tag-brown-bg: #f3eeee;     --tag-brown-text: #7a4d36;
+      --tag-orange-bg: #faece3;    --tag-orange-text: #b25916;
+      --tag-yellow-bg: #fbf3db;    --tag-yellow-text: #956400;
+      --tag-green-bg: #edf3ec;     --tag-green-text: #346538;
+      --tag-blue-bg: #e1f3fe;      --tag-blue-text: #1f6c9f;
+      --tag-purple-bg: #f4edf7;    --tag-purple-text: #79359e;
+      --tag-pink-bg: #faebf2;      --tag-pink-text: #a82e66;
+      --tag-red-bg: #fdebec;       --tag-red-text: #9f2f2d;
+
+      /* Notion Progress Bar / Accent Tones */
+      --accent-primary: #2383e2;
+      --accent-primary-hover: #1b6ac9;
+      --accent-success: #346538;
+      --accent-warning: #b25916;
+      --accent-danger: #9f2f2d;
+      
+      --shadow-sm: 0 1px 2px rgba(15, 15, 15, 0.05);
+      --shadow-md: 0 2px 6px rgba(15, 15, 15, 0.07);
+      --shadow-popover: 0 10px 28px rgba(15, 15, 15, 0.12), 0 0 0 1px rgba(15, 15, 15, 0.05);
+
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      --font-mono: 'Geist Mono', ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+      
+      --radius-xs: 4px;
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-full: 9999px;
+
+      --chart-down: #2383e2;
+      --chart-up: #346538;
+      --chart-grid: rgba(55, 53, 47, 0.08);
+    }
+
+    [data-theme="dark"] {
+      /* Notion Dark Mode */
+      --bg-canvas: #191919;
+      --bg-sidebar: #202020;
+      --bg-card: #202020;
+      --bg-card-hover: #292929;
+      --bg-subtle: #252525;
+      --bg-active: #323232;
+      --bg-input: #242424;
+      
+      --border-main: #2f2f2f;
+      --border-subtle: #272727;
+      --border-dark: #3f3f3f;
+      
+      --text-main: #ebebeb;
+      --text-secondary: #999999;
+      --text-muted: #737373;
+      --text-faint: #4a4a4a;
+
+      /* Notion Signature Tag Colors (Dark) */
+      --tag-gray-bg: #2f2f2f;      --tag-gray-text: #999999;
+      --tag-brown-bg: #43322b;     --tag-brown-text: #bf9077;
+      --tag-orange-bg: #5c3b1e;    --tag-orange-text: #ea9a3e;
+      --tag-yellow-bg: #56471e;    --tag-yellow-text: #dfab01;
+      --tag-green-bg: #254b38;     --tag-green-text: #62c073;
+      --tag-blue-bg: #28456c;      --tag-blue-text: #6cb8f6;
+      --tag-purple-bg: #442b58;    --tag-purple-text: #b382d9;
+      --tag-pink-bg: #532d40;      --tag-pink-text: #e06c9f;
+      --tag-red-bg: #56282d;       --tag-red-text: #eb6d71;
+
+      --accent-primary: #3c8fe6;
+      --accent-primary-hover: #5ba3ec;
+      --accent-success: #62c073;
+      --accent-warning: #ea9a3e;
+      --accent-danger: #eb6d71;
+
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.4);
+      --shadow-popover: 0 12px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
+
+      --chart-down: #6cb8f6;
+      --chart-up: #62c073;
+      --chart-grid: rgba(255, 255, 255, 0.06);
+    }
+
+    /* Base Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    /* Notion Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-dark);
+      border-radius: var(--radius-full);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-muted);
+    }
+
+    /* =========================================
+       TOP BREADCRUMB & UTILITY BAR
+       ========================================= */
+    .top-bar {
+      border-bottom: 1px solid var(--border-main);
+      background: var(--bg-canvas);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 0.55rem 1.5rem;
+      backdrop-filter: blur(12px);
+    }
+
+    .top-bar-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .breadcrumbs {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .breadcrumb-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.2rem 0.4rem;
+      border-radius: var(--radius-xs);
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+
+    .breadcrumb-item:hover {
+      background: var(--bg-card-hover);
+      color: var(--text-main);
+    }
+
+    .breadcrumb-sep {
+      color: var(--text-faint);
+      font-size: 0.75rem;
+    }
+
+    .breadcrumb-current {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .notion-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-main);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      box-shadow: var(--shadow-sm);
+      user-select: none;
+      text-decoration: none;
+    }
+
+    .notion-btn:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-dark);
+    }
+
+    .notion-btn:active {
+      transform: scale(0.98);
+    }
+
+    .notion-btn.primary {
+      background: var(--accent-primary);
+      color: #ffffff;
+      border-color: var(--accent-primary);
+    }
+
+    .notion-btn.primary:hover {
+      background: var(--accent-primary-hover);
+      border-color: var(--accent-primary-hover);
+    }
+
+    .live-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.6rem;
+      border-radius: var(--radius-full);
+      background: var(--tag-green-bg);
+      color: var(--tag-green-text);
+      border: 1px solid transparent;
+      user-select: none;
+    }
+
+    .live-indicator.disconnected {
+      background: var(--tag-red-bg);
+      color: var(--tag-red-text);
+    }
+
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: gentle-pulse 2s infinite ease-in-out;
+    }
+
+    .disconnected .pulse-dot {
+      animation: none;
+    }
+
+    @keyframes gentle-pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    /* =========================================
+       MAIN NOTION DOCUMENT LAYOUT
+       ========================================= */
+    main {
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      flex: 1;
+    }
+
+    /* Document Header */
+    .notion-page-header {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .page-icon-wrapper {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-md);
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      box-shadow: var(--shadow-sm);
+      cursor: default;
+    }
+
+    .page-title-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .page-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .page-subtitle {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    /* Notion Properties Grid */
+    .notion-properties {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.75rem;
+      padding: 1rem 1.25rem;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-main);
+      border-radius: var(--radius-md);
+    }
+
+    .property-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      font-size: 0.84rem;
+    }
+
+    .property-label {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .property-label svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--text-muted);
+    }
+
+    .notion-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.18rem 0.55rem;
+      border-radius: var(--radius-xs);
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .tag-blue { background: var(--tag-blue-bg); color: var(--tag-blue-text); }
+    .tag-green { background: var(--tag-green-bg); color: var(--tag-green-text); }
+    .tag-orange { background: var(--tag-orange-bg); color: var(--tag-orange-text); }
+    .tag-purple { background: var(--tag-purple-bg); color: var(--tag-purple-text); }
+    .tag-red { background: var(--tag-red-bg); color: var(--tag-red-text); }
+    .tag-gray { background: var(--tag-gray-bg); color: var(--tag-gray-text); }
+    .tag-yellow { background: var(--tag-yellow-bg); color: var(--tag-yellow-text); }
+
+    /* Notion Callout Box */
+    .notion-callout {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+      padding: 0.9rem 1.15rem;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-main);
+      border-radius: var(--radius-md);
+      font-size: 0.87rem;
+      color: var(--text-main);
+      transition: all 0.2s ease;
+    }
+
+    .notion-callout.hidden {
+      display: none;
+    }
+
+    .callout-icon {
+      font-size: 1.15rem;
+      line-height: 1.2;
+    }
+
+    .callout-content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .callout-text {
+      color: var(--text-secondary);
+    }
+
+    .callout-text strong {
+      color: var(--text-main);
+    }
+
+    /* LAN Access Chips in Callout/Property */
+    .lan-popover-box {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .lan-pill-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-main);
+      color: var(--text-main);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      padding: 0.22rem 0.55rem;
+      border-radius: var(--radius-xs);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .lan-pill-btn:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+    }
+
+    /* =========================================
+       NOTION VIEW TABS / DATABASE CONTROLS
+       ========================================= */
+    .notion-tabs-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-main);
+      gap: 1rem;
+      overflow-x: auto;
+      padding-bottom: 0.1rem;
+    }
+
+    .tabs-group {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .view-tab-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+      font-weight: 500;
+      padding: 0.45rem 0.75rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .view-tab-btn:hover {
+      background: var(--bg-card-hover);
+      color: var(--text-main);
+    }
+
+    .view-tab-btn.active {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .view-tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0.5rem;
+      right: 0.5rem;
+      height: 2px;
+      background: var(--text-main);
+      border-radius: 2px;
+    }
+
+    /* View Controls Right */
+    .view-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .search-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-input-wrap svg {
+      position: absolute;
+      left: 0.6rem;
+      width: 14px;
+      height: 14px;
+      stroke: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .notion-search-input {
+      background: var(--bg-input);
+      border: 1px solid var(--border-main);
+      border-radius: var(--radius-sm);
+      padding: 0.35rem 0.65rem 0.35rem 2rem;
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      color: var(--text-main);
+      outline: none;
+      width: 200px;
+      transition: all 0.15s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .notion-search-input:focus {
+      border-color: var(--accent-primary);
+      width: 240px;
+    }
+
+    .search-kbd {
+      position: absolute;
+      right: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-main);
+      border-radius: var(--radius-xs);
+      padding: 0.1rem 0.3rem;
+      pointer-events: none;
+    }
+
+    /* =========================================
+       NOTION GALLERY / BENTO METRICS CARDS
+       ========================================= */
+    .metrics-bento-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+
+    @media (max-width: 1100px) {
+      .metrics-bento-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .metrics-bento-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .notion-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-main);
+      border-radius: var(--radius-md);
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.15s ease;
+      position: relative;
+    }
+
+    .notion-card:hover {
+      border-color: var(--border-dark);
+      background: var(--bg-card-hover);
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .card-title-wrap svg {
+      width: 15px;
+      height: 15px;
+      stroke: var(--text-secondary);
+    }
+
+    /* Hero Stat Presentation */
+    .stat-hero {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .stat-value {
+      font-family: var(--font-mono);
+      font-size: 2.1rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: var(--text-main);
+      line-height: 1;
+    }
+
+    .stat-subtext {
+      font-size: 0.8rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Notion Linear Progress Bar */
+    .notion-progress-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .progress-track {
+      height: 6px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: var(--radius-full);
+      transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
+      background: var(--accent-primary);
+    }
+
+    .progress-fill.fill-blue { background: var(--accent-primary); }
+    .progress-fill.fill-purple { background: var(--tag-purple-text); }
+    .progress-fill.fill-green { background: var(--accent-success); }
+    .progress-fill.fill-orange { background: var(--accent-warning); }
+    .progress-fill.fill-red { background: var(--accent-danger); }
+
+    /* Key Value Matrix Rows */
+    .card-meta-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding-top: 0.65rem;
+      border-top: 1px solid var(--border-main);
+      margin-top: auto;
+    }
+
+    .meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+    }
+
+    .meta-key {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .meta-val {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    /* =========================================
+       PER-CORE CPU GRID (Notion Bento)
+       ========================================= */
+    .notion-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-main);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-size: 0.98rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .section-heading svg {
+      width: 17px;
+      height: 17px;
+      stroke: var(--text-secondary);
+    }
+
+    .cores-bento {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 0.6rem;
+    }
+
+    .core-cell {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-main);
+      border-radius: var(--radius-sm);
+      padding: 0.6rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      transition: all 0.15s ease;
+    }
+
+    .core-cell:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-dark);
+    }
+
+    .core-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.74rem;
+      font-family: var(--font-mono);
+      color: var(--text-secondary);
+    }
+
+    .core-val {
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .core-bar-track {
+      height: 5px;
+      background: var(--bg-canvas);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+
+    .core-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent-primary);
+      border-radius: var(--radius-full);
+      transition: width 0.3s ease;
+    }
+
+    /* =========================================
+       STORAGE & NETWORK 2-COLUMN SECTION
+       ========================================= */
+    .two-col-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 960px) {
+      .two-col-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .drives-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .drive-item {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-main);
+      border-radius: var(--radius-sm);
+      padding: 0.85rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .drive-row-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .drive-name {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .drive-stats {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+
+    /* Real-Time Canvas Graph Container */
+    .chart-box {
+      position: relative;
+      height: 140px;
+      width: 100%;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-main);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      padding: 0.5rem;
+    }
+
+    canvas.notion-chart {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* =========================================
+       NOTION DATABASE TABLE (PROCESSES & SERVICES)
+       ========================================= */
+    .table-view-wrapper {
+      border: 1px solid var(--border-main);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background: var(--bg-card);
+    }
+
+    .table-scroll-container {
+      max-height: 420px;
+      overflow-y: auto;
+      overflow-x: auto;
+    }
+
+    table.notion-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.83rem;
+      text-align: left;
+    }
+
+    table.notion-table th {
+      position: sticky;
+      top: 0;
+      background: var(--bg-subtle);
+      color: var(--text-secondary);
+      font-weight: 500;
+      font-size: 0.76rem;
+      padding: 0.55rem 0.9rem;
+      border-bottom: 1px solid var(--border-main);
+      border-right: 1px solid var(--border-subtle);
+      z-index: 10;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    table.notion-table th:last-child {
+      border-right: none;
+    }
+
+    table.notion-table th .th-inner {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    table.notion-table th svg {
+      width: 13px;
+      height: 13px;
+      stroke: var(--text-muted);
+    }
+
+    table.notion-table td {
+      padding: 0.5rem 0.9rem;
+      border-bottom: 1px solid var(--border-subtle);
+      border-right: 1px solid var(--border-subtle);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-main);
+      white-space: nowrap;
+    }
+
+    table.notion-table td:last-child {
+      border-right: none;
+    }
+
+    table.notion-table tr:hover td {
+      background: var(--bg-card-hover);
+    }
+
+    table.notion-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .proc-name-cell {
+      font-family: var(--font-sans) !important;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .service-disp-cell {
+      font-family: var(--font-sans) !important;
+      color: var(--text-secondary);
+    }
+
+    /* =========================================
+       TOAST NOTIFICATION (NOTION STYLE)
+       ========================================= */
+    .notion-toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border-dark);
+      padding: 0.6rem 1.1rem;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-popover);
+      font-size: 0.85rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .notion-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* =========================================
+       FOOTER
+       ========================================= */
+    footer {
+      border-top: 1px solid var(--border-main);
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      background: var(--bg-canvas);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    .footer-link:hover {
+      color: var(--text-main);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Breadcrumb & Control Bar -->
+  <header class="top-bar">
+    <div class="top-bar-inner">
+      <div class="breadcrumbs">
+        <span class="breadcrumb-item">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          Workspace
+        </span>
+        <span class="breadcrumb-sep">/</span>
+        <span class="breadcrumb-item">Telemetry</span>
+        <span class="breadcrumb-sep">/</span>
+        <span class="breadcrumb-item breadcrumb-current">⚡ Metrics by JJ</span>
+      </div>
+
+      <div class="top-actions">
+        <!-- Live Status Pill -->
+        <div class="live-indicator" id="ws-indicator" title="WebSocket Live Telemetry Stream">
+          <span class="pulse-dot"></span>
+          <span id="ws-label">LIVE · 1s</span>
+        </div>
+
+        <!-- Copy LAN URL Button -->
+        <button class="notion-btn" onclick="copyPrimaryUrl()" title="Copy LAN IP for Phone or Remote Monitor">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+          <span>Share LAN</span>
+        </button>
+
+        <!-- Theme Switcher Toggle -->
+        <button class="notion-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Notion Dark / Light Theme">
+          <svg id="theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          <svg id="theme-icon-sun" style="display:none;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <span id="theme-label">Theme</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Notion Document Header -->
+    <div class="notion-page-header">
+      <div class="page-icon-wrapper">
+        ⚡
+      </div>
+      <div class="page-title-group">
+        <h1 class="page-title">Metrics by JJ</h1>
+        <p class="page-subtitle">Real-time Windows telemetry engine, resource monitor & hardware performance hub.</p>
+      </div>
+
+      <!-- Notion Property Matrix Table -->
+      <div class="notion-properties">
+        <div class="property-item">
+          <span class="property-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            Host Device
+          </span>
+          <span class="notion-tag tag-purple" id="meta-hostname">DESKTOP</span>
+        </div>
+
+        <div class="property-item">
+          <span class="property-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>
+            Operating System
+          </span>
+          <span class="notion-tag tag-blue" id="meta-os">Windows 11</span>
+        </div>
+
+        <div class="property-item">
+          <span class="property-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            System Uptime
+          </span>
+          <span class="notion-tag tag-green" id="meta-uptime">0h 00m</span>
+        </div>
+
+        <div class="property-item">
+          <span class="property-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+            Network IP
+          </span>
+          <span class="notion-tag tag-orange" id="meta-primary-ip" style="cursor: pointer;" onclick="copyPrimaryUrl()" title="Click to copy primary URL">127.0.0.1</span>
+        </div>
+      </div>
+
+      <!-- Hardware Sensor Detection Callout -->
+      <div class="notion-callout" id="lhm-banner">
+        <div class="callout-icon">💡</div>
+        <div class="callout-content">
+          <div class="callout-text">
+            <strong>Unlock Hardware Temperature Sensors:</strong> Run <b>LibreHardwareMonitor</b> in the background with WMI enabled to access per-core thermal probes and detailed GPU telemetry.
+          </div>
+          <a href="https://github.com/LibreHardwareMonitor/LibreHardwareMonitor/releases" target="_blank" class="notion-btn">
+            <span>Download Sensor Bridge ↗</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- LAN URLs Access Popover Bar -->
+      <div class="notion-callout">
+        <div class="callout-icon">🌐</div>
+        <div class="callout-content">
+          <div class="callout-text">
+            <strong>LAN Access Links:</strong> View live metrics on your mobile phone, tablet, or secondary monitor:
+          </div>
+          <div class="lan-popover-box" id="lan-chips">
+            <button class="lan-pill-btn" onclick="copyText('http://localhost:8989')">http://localhost:8989</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notion Database View Tabs Bar -->
+    <div class="notion-tabs-bar">
+      <div class="tabs-group">
+        <button class="view-tab-btn active" id="tab-btn-overview" onclick="switchMainView('overview')">
+          <span>🎛️ Overview</span>
+        </button>
+        <button class="view-tab-btn" id="tab-btn-procs" onclick="switchMainView('procs')">
+          <span>⚡ Processes (<span id="proc-count-badge">10</span>)</span>
+        </button>
+        <button class="view-tab-btn" id="tab-btn-services" onclick="switchMainView('services')">
+          <span>🛠️ Services (<span id="serv-count-badge">0</span>)</span>
+        </button>
+      </div>
+
+      <div class="view-controls">
+        <div class="search-input-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" id="filter-input" class="notion-search-input" placeholder="Filter processes..." oninput="onFilterChange(this.value)">
+          <kbd class="search-kbd">/</kbd>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 1: OVERVIEW SECTION -->
+    <div id="view-overview" style="display: flex; flex-direction: column; gap: 1.5rem;">
+      
+      <!-- 4 Primary Metric Cards Grid -->
+      <div class="metrics-bento-grid">
+        
+        <!-- CPU Card -->
+        <div class="notion-card">
+          <div class="card-top">
+            <div class="card-title-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect></svg>
+              <span>Processor (CPU)</span>
+            </div>
+            <span class="notion-tag tag-blue" id="cpu-tag">0%</span>
+          </div>
+
+          <div class="stat-hero">
+            <div class="stat-value" id="cpu-percent">0%</div>
+            <div class="stat-subtext" id="cpu-freq">0.00 GHz</div>
+          </div>
+
+          <div class="notion-progress-wrap">
+            <div class="progress-track">
+              <div class="progress-fill fill-blue" id="bar-cpu" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <div class="card-meta-list">
+            <div class="meta-row">
+              <span class="meta-key">Cores / Threads</span>
+              <span class="meta-val" id="cpu-cores-text">- / -</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-key">Temperature</span>
+              <span class="meta-val" id="cpu-temp-val">-- °C</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- GPU Card -->
+        <div class="notion-card">
+          <div class="card-top">
+            <div class="card-title-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+              <span>Graphics (GPU)</span>
+            </div>
+            <span class="notion-tag tag-purple" id="gpu-tag">Ready</span>
+          </div>
+
+          <div class="stat-hero">
+            <div class="stat-value" id="gpu-temp-val">Ready</div>
+            <div class="stat-subtext" id="gpu-power-val">Active</div>
+          </div>
+
+          <div class="notion-progress-wrap">
+            <div class="progress-track">
+              <div class="progress-fill fill-purple" id="bar-gpu" style="width: 20%;"></div>
+            </div>
+          </div>
+
+          <div class="card-meta-list">
+            <div class="meta-row">
+              <span class="meta-key">GPU Model</span>
+              <span class="meta-val" id="gpu-model-text" style="max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">-</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-key">Clock Rate</span>
+              <span class="meta-val" id="gpu-clock-val">-- MHz</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RAM Card -->
+        <div class="notion-card">
+          <div class="card-top">
+            <div class="card-title-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+              <span>Memory (RAM)</span>
+            </div>
+            <span class="notion-tag tag-green" id="ram-tag">0%</span>
+          </div>
+
+          <div class="stat-hero">
+            <div class="stat-value" id="ram-percent">0%</div>
+            <div class="stat-subtext" id="ram-used-short">0 GB</div>
+          </div>
+
+          <div class="notion-progress-wrap">
+            <div class="progress-track">
+              <div class="progress-fill fill-green" id="bar-ram" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <div class="card-meta-list">
+            <div class="meta-row">
+              <span class="meta-key">Allocated</span>
+              <span class="meta-val" id="ram-used-full">0 GB / 0 GB</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-key">Available</span>
+              <span class="meta-val" id="ram-avail-gb">0 GB</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Network Card -->
+        <div class="notion-card">
+          <div class="card-top">
+            <div class="card-title-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
+              <span>Network I/O</span>
+            </div>
+            <span class="notion-tag tag-orange" id="net-tag">Active</span>
+          </div>
+
+          <div class="stat-hero">
+            <div class="stat-value" id="net-down-val" style="font-size: 1.6rem;">0 B/s</div>
+            <div class="stat-subtext">Down</div>
+          </div>
+
+          <div class="notion-progress-wrap">
+            <div class="progress-track">
+              <div class="progress-fill fill-orange" id="bar-net" style="width: 15%;"></div>
+            </div>
+          </div>
+
+          <div class="card-meta-list">
+            <div class="meta-row">
+              <span class="meta-key">Upload Rate</span>
+              <span class="meta-val" id="net-up-val">0 B/s</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-key">Total Transferred</span>
+              <span class="meta-val" id="net-total-recv">0 GB</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Per-Core Activity Section -->
+      <div class="notion-section">
+        <div class="section-header">
+          <div class="section-heading">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="15"></line><line x1="15" y1="9" x2="9" y2="15"></line></svg>
+            <span>Logical Cores Distribution</span>
+          </div>
+          <span class="notion-tag tag-gray" id="core-count-label">0 Cores</span>
+        </div>
+        <div class="cores-bento" id="cores-container">
+          <!-- Dynamic Core Tiles -->
+        </div>
+      </div>
+
+      <!-- Storage & Real-Time Network Section -->
+      <div class="two-col-layout">
+        
+        <!-- Storage Disks -->
+        <div class="notion-section">
+          <div class="section-header">
+            <div class="section-heading">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+              <span>Storage Volumes</span>
+            </div>
+            <span class="notion-tag tag-gray" id="disk-io-rate">R: 0 B/s · W: 0 B/s</span>
+          </div>
+          <div class="drives-stack" id="drives-container">
+            <!-- Dynamic Drive Items -->
+          </div>
+        </div>
+
+        <!-- Network Bandwidth Graph -->
+        <div class="notion-section">
+          <div class="section-header">
+            <div class="section-heading">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+              <span>Bandwidth Telemetry (60s)</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.6rem; font-family: var(--font-mono); font-size: 0.75rem;">
+              <span style="color: var(--chart-down)">● Down</span>
+              <span style="color: var(--chart-up)">● Up</span>
+            </div>
+          </div>
+          <div class="chart-box">
+            <canvas id="network-canvas" class="notion-chart"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- VIEW 2: PROCESSES TABLE SECTION -->
+    <div id="view-procs" style="display: none; flex-direction: column; gap: 1rem;">
+      <div class="table-view-wrapper">
+        <div class="table-scroll-container">
+          <table class="notion-table">
+            <thead>
+              <tr>
+                <th style="width: 80px;">
+                  <div class="th-inner">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line></svg>
+                    PID
+                  </div>
+                </th>
+                <th>
+                  <div class="th-inner">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>
+                    Process Name
+                  </div>
+                </th>
+                <th style="width: 100px;">
+                  <div class="th-inner">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>
+                    CPU %
+                  </div>
+                </th>
+                <th style="width: 100px;">
+                  <div class="th-inner">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>
+                    RAM %
+                  </div>
+                </th>
+                <th style="width: 120px;">
+                  <div class="th-inner">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+                    Working Set
+                  </div>
+                </th>
+                <th style="width: 90px;">
+                  <div class="th-inner">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                    Threads
+                  </div>
+                </th>
+                <th style="width: 110px;">
+                  <div class="th-inner">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                    Status
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="procs-tbody">
+              <!-- Dynamic Rows -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 3: SERVICES TABLE SECTION -->
+    <div id="view-services" style="display: none; flex-direction: column; gap: 1rem;">
+      <div class="table-view-wrapper">
+        <div class="table-scroll-container">
+          <table class="notion-table">
+            <thead>
+              <tr>
+                <th style="width: 220px;">
+                  <div class="th-inner">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    Service Key
+                  </div>
+                </th>
+                <th>
+                  <div class="th-inner">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>
+                    Display Name
+                  </div>
+                </th>
+                <th style="width: 110px;">
+                  <div class="th-inner">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                    Status
+                  </div>
+                </th>
+                <th style="width: 120px;">
+                  <div class="th-inner">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polyline></svg>
+                    Startup
+                  </div>
+                </th>
+                <th style="width: 90px;">
+                  <div class="th-inner">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line></svg>
+                    PID
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="services-tbody">
+              <!-- Dynamic Rows -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Notion Floating Toast Alert -->
+  <div id="notion-toast" class="notion-toast">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-success)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    <span id="toast-message">Copied to clipboard</span>
+  </div>
+
+  <!-- Notion Workspace Footer -->
+  <footer>
+    <span>Metrics by JJ · Private System Telemetry</span>
+    <span>•</span>
+    <span>WebSocket Engine v1.0</span>
+    <span>•</span>
+    <a href="https://github.com/LibreHardwareMonitor/LibreHardwareMonitor" target="_blank" class="footer-link">Hardware Sensors Bridge</a>
+  </footer>
+
+  <!-- =========================================
+       NOTION DASHBOARD CLIENT ENGINE
+       ========================================= -->
+  <script>
+    // Theme Management
+    let currentTheme = localStorage.getItem('metrics_jj_theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    updateThemeUI();
+
+    function toggleTheme() {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      localStorage.setItem('metrics_jj_theme', currentTheme);
+      updateThemeUI();
+      drawNetworkCanvas();
+      showToast(`Switched to Notion ${currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)} Mode`);
+    }
+
+    function updateThemeUI() {
+      const isDark = currentTheme === 'dark';
+      document.getElementById('theme-icon-moon').style.display = isDark ? 'none' : 'block';
+      document.getElementById('theme-icon-sun').style.display = isDark ? 'block' : 'none';
+      document.getElementById('theme-label').innerText = isDark ? 'Dark' : 'Light';
+    }
+
+    // State Variables
+    let activeView = 'overview';
+    let rawProcesses = [];
+    let rawServices = [];
+    let primaryLanUrl = window.location.origin;
+
+    // 60-point rolling buffers for live canvas chart
+    const historyLen = 60;
+    const downloadHistory = new Array(historyLen).fill(0);
+    const uploadHistory = new Array(historyLen).fill(0);
+
+    // Helpers
+    function formatBytes(bytes, decimals = 1) {
+      if (!bytes || bytes === 0) return '0 B';
+      const k = 1024;
+      const dm = decimals < 0 ? 0 : decimals;
+      const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
+
+    function formatSpeed(bytesPerSec) {
+      return formatBytes(bytesPerSec) + '/s';
+    }
+
+    function formatUptime(seconds) {
+      const d = Math.floor(seconds / (3600 * 24));
+      const h = Math.floor((seconds % (3600 * 24)) / 3600);
+      const m = Math.floor((seconds % 3600) / 60);
+      return (d > 0 ? `${d}d ` : '') + `${h}h ${m < 10 ? '0' : ''}${m}m`;
+    }
+
+    function escapeHtml(str) {
+      return String(str || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]);
+    }
+
+    // Toast Manager
+    let toastTimeout = null;
+    function showToast(msg) {
+      const toast = document.getElementById('notion-toast');
+      const text = document.getElementById('toast-message');
+      if (!toast || !text) return;
+      text.innerText = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2400);
+    }
+
+    function copyText(str) {
+      navigator.clipboard.writeText(str).then(() => {
+        showToast(`Copied: ${str}`);
+      }).catch(() => {
+        showToast(`Copied: ${str}`);
+      });
+    }
+
+    function copyPrimaryUrl() {
+      copyText(primaryLanUrl);
+    }
+
+    // View Switching
+    function switchMainView(viewId) {
+      activeView = viewId;
+      document.getElementById('tab-btn-overview').classList.toggle('active', viewId === 'overview');
+      document.getElementById('tab-btn-procs').classList.toggle('active', viewId === 'procs');
+      document.getElementById('tab-btn-services').classList.toggle('active', viewId === 'services');
+
+      document.getElementById('view-overview').style.display = viewId === 'overview' ? 'flex' : 'none';
+      document.getElementById('view-procs').style.display = viewId === 'procs' ? 'flex' : 'none';
+      document.getElementById('view-services').style.display = viewId === 'services' ? 'flex' : 'none';
+
+      // Re-trigger canvas redraw if overview became visible
+      if (viewId === 'overview') {
+        setTimeout(drawNetworkCanvas, 50);
+      }
+    }
+
+    // Keyboard shortcut '/' for instant focus on filter
+    window.addEventListener('keydown', (e) => {
+      if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+        e.preventDefault();
+        const input = document.getElementById('filter-input');
+        if (input) {
+          input.focus();
+          input.select();
+        }
+      }
+    });
+
+    function onFilterChange(val) {
+      const q = val.toLowerCase().trim();
+      if (activeView === 'overview' && q.length > 0) {
+        switchMainView('procs');
+      }
+      renderProcesses(rawProcesses.filter(p => p.name.toLowerCase().includes(q) || String(p.pid).includes(q)));
+      renderServices(rawServices.filter(s => s.name.toLowerCase().includes(q) || s.display_name.toLowerCase().includes(q)));
+    }
+
+    // Dynamic Renderers
+    function renderCores(cores) {
+      const container = document.getElementById('cores-container');
+      if (!container) return;
+
+      if (container.children.length !== cores.length) {
+        container.innerHTML = '';
+        cores.forEach((_, idx) => {
+          const cell = document.createElement('div');
+          cell.className = 'core-cell';
+          cell.innerHTML = `
+            <div class="core-head">
+              <span>Core ${idx}</span>
+              <span class="core-val" id="cval-${idx}">0%</span>
+            </div>
+            <div class="core-bar-track">
+              <div class="core-bar-fill" id="cbar-${idx}"></div>
+            </div>
+          `;
+          container.appendChild(cell);
+        });
+      }
+
+      cores.forEach((load, idx) => {
+        const valEl = document.getElementById(`cval-${idx}`);
+        const barEl = document.getElementById(`cbar-${idx}`);
+        const rounded = Math.round(load);
+        if (valEl) valEl.innerText = `${rounded}%`;
+        if (barEl) {
+          barEl.style.width = `${Math.min(100, Math.max(0, load))}%`;
+          if (load >= 90) barEl.style.background = 'var(--accent-danger)';
+          else if (load >= 70) barEl.style.background = 'var(--accent-warning)';
+          else barEl.style.background = 'var(--accent-primary)';
+        }
+      });
+      document.getElementById('core-count-label').innerText = `${cores.length} Cores`;
+    }
+
+    function renderDrives(drives, readBps, writeBps) {
+      const container = document.getElementById('drives-container');
+      if (!container) return;
+
+      document.getElementById('disk-io-rate').innerText = `R: ${formatSpeed(readBps)} · W: ${formatSpeed(writeBps)}`;
+
+      if (container.children.length !== drives.length) {
+        container.innerHTML = '';
+        drives.forEach(d => {
+          const div = document.createElement('div');
+          div.className = 'drive-item';
+          div.id = `drive-${d.mountpoint.replace(/[^a-zA-Z0-9]/g, '_')}`;
+          container.appendChild(div);
+        });
+      }
+
+      drives.forEach(d => {
+        const div = document.getElementById(`drive-${d.mountpoint.replace(/[^a-zA-Z0-9]/g, '_')}`);
+        if (!div) return;
+        const isHigh = d.percent > 90;
+        div.innerHTML = `
+          <div class="drive-row-top">
+            <span class="drive-name">
+              <span>💾</span>
+              <span>${d.mountpoint}</span>
+              <span class="notion-tag tag-gray" style="font-size: 0.7rem;">${d.fstype || 'NTFS'}</span>
+            </span>
+            <span class="drive-stats">${formatBytes(d.used_bytes)} / ${formatBytes(d.total_bytes)} (${d.percent}%)</span>
+          </div>
+          <div class="progress-track" style="height: 6px;">
+            <div class="progress-fill ${isHigh ? 'fill-red' : 'fill-blue'}" style="width: ${d.percent}%;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.76rem; color: var(--text-muted); font-family: var(--font-mono);">
+            <span>Free: ${formatBytes(d.free_bytes)}</span>
+            <span>Used: ${d.percent}%</span>
+          </div>
+        `;
+      });
+    }
+
+    function renderProcesses(procs) {
+      const tbody = document.getElementById('procs-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = procs.map(p => `
+        <tr>
+          <td style="color: var(--text-muted);">${p.pid}</td>
+          <td class="proc-name-cell">
+            <span style="opacity: 0.6;">⚙️</span>
+            <span>${escapeHtml(p.name)}</span>
+          </td>
+          <td style="color: ${p.cpu_percent > 20 ? 'var(--accent-danger)' : 'var(--text-main)'}; font-weight: 600;">${p.cpu_percent}%</td>
+          <td style="color: var(--text-secondary);">${p.memory_percent}%</td>
+          <td>${formatBytes(p.memory_rss_bytes)}</td>
+          <td>${p.threads}</td>
+          <td><span class="notion-tag tag-green">running</span></td>
+        </tr>
+      `).join('');
+    }
+
+    function renderServices(services) {
+      const tbody = document.getElementById('services-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = services.map(s => `
+        <tr>
+          <td style="font-weight: 600;">${escapeHtml(s.name)}</td>
+          <td class="service-disp-cell">${escapeHtml(s.display_name || s.name)}</td>
+          <td>
+            <span class="notion-tag ${s.status === 'running' ? 'tag-green' : 'tag-gray'}">
+              ${s.status.toUpperCase()}
+            </span>
+          </td>
+          <td style="color: var(--text-muted);">${escapeHtml(s.start_type || 'auto')}</td>
+          <td style="color: var(--text-muted);">${s.pid || '-'}</td>
+        </tr>
+      `).join('');
+    }
+
+    // High-DPI Smooth Canvas Network Graph
+    function drawNetworkCanvas() {
+      const canvas = document.getElementById('network-canvas');
+      if (!canvas || !canvas.parentElement) return;
+
+      const rect = canvas.parentElement.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      const w = rect.width - 16;
+      const h = rect.height - 16;
+
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
+
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, w, h);
+
+      const maxVal = Math.max(...downloadHistory, ...uploadHistory, 1024 * 100);
+
+      // Grid Lines
+      const isDark = currentTheme === 'dark';
+      ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(55, 53, 47, 0.06)';
+      ctx.lineWidth = 1;
+      for (let y = 0; y < h; y += h / 3) {
+        ctx.beginPath();
+        ctx.moveTo(0, Math.round(y) + 0.5);
+        ctx.lineTo(w, Math.round(y) + 0.5);
+        ctx.stroke();
+      }
+
+      // Colors
+      const downStroke = isDark ? '#6cb8f6' : '#2383e2';
+      const downFill = isDark ? 'rgba(108, 184, 246, 0.12)' : 'rgba(35, 131, 226, 0.09)';
+      const upStroke = isDark ? '#62c073' : '#346538';
+      const upFill = isDark ? 'rgba(98, 192, 115, 0.12)' : 'rgba(52, 101, 56, 0.08)';
+
+      // Draw Download Series
+      drawSmoothSeries(ctx, downloadHistory, maxVal, w, h, downStroke, downFill);
+
+      // Draw Upload Series
+      drawSmoothSeries(ctx, uploadHistory, maxVal, w, h, upStroke, upFill);
+    }
+
+    function drawSmoothSeries(ctx, data, maxVal, w, h, strokeColor, fillColor) {
+      if (data.length < 2) return;
+      const step = w / (data.length - 1);
+
+      ctx.beginPath();
+      ctx.moveTo(0, h - (data[0] / maxVal) * (h - 8));
+
+      for (let i = 1; i < data.length; i++) {
+        const x = i * step;
+        const y = h - (data[i] / maxVal) * (h - 8);
+        ctx.lineTo(x, y);
+      }
+
+      ctx.strokeStyle = strokeColor;
+      ctx.lineWidth = 1.75;
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+
+      // Close polygon for area fill
+      ctx.lineTo(w, h);
+      ctx.lineTo(0, h);
+      ctx.closePath();
+      ctx.fillStyle = fillColor;
+      ctx.fill();
+    }
+
+    // LAN Access Pills Updater
+    function updateLanChips(system) {
+      const container = document.getElementById('lan-chips');
+      if (!container || !system.all_ips) return;
+
+      const port = window.location.port || (window.location.protocol === 'https:' ? '443' : '80');
+      let chipsHtml = `
+        <button class="lan-pill-btn" onclick="copyText('http://localhost:${port}')" title="Click to copy localhost URL">
+          <span>🖥️ localhost:${port}</span>
+        </button>
+      `;
+
+      if (system.primary_ip && system.primary_ip !== '127.0.0.1') {
+        primaryLanUrl = `http://${system.primary_ip}:${port}`;
+        document.getElementById('meta-primary-ip').innerText = system.primary_ip;
+      }
+
+      system.all_ips.forEach(ipItem => {
+        const url = `http://${ipItem.ip}:${port}`;
+        chipsHtml += `
+          <button class="lan-pill-btn" onclick="copyText('${url}')" title="Click to copy ${ipItem.interface}">
+            <span>🌐 ${ipItem.interface}: ${ipItem.ip}:${port}</span>
+          </button>
+        `;
+      });
+
+      container.innerHTML = chipsHtml;
+    }
+
+    // Master Dashboard State Updater
+    function updateDashboard(data) {
+      if (!data) return;
+
+      // Header Meta
+      if (data.system) {
+        document.getElementById('meta-hostname').innerText = data.system.hostname || 'DESKTOP';
+        document.getElementById('meta-os').innerText = data.system.os ? data.system.os.split('(')[0].trim() : 'Windows';
+      }
+      if (data.uptime_seconds) {
+        document.getElementById('meta-uptime').innerText = formatUptime(data.uptime_seconds);
+      }
+
+      // Sensor Banner
+      const lhmActive = data.hardware_bridge?.lhm_active;
+      const banner = document.getElementById('lhm-banner');
+      if (banner && lhmActive) {
+        banner.classList.add('hidden');
+      }
+
+      // CPU
+      if (data.cpu) {
+        const cpuUsage = data.cpu.usage_percent || 0;
+        const rounded = Math.round(cpuUsage);
+        document.getElementById('cpu-percent').innerText = `${rounded}%`;
+        document.getElementById('cpu-tag').innerText = `${rounded}%`;
+        document.getElementById('bar-cpu').style.width = `${Math.min(100, Math.max(0, cpuUsage))}%`;
+
+        if (data.cpu.current_freq_mhz) {
+          document.getElementById('cpu-freq').innerText = `${(data.cpu.current_freq_mhz / 1000).toFixed(2)} GHz`;
+        }
+
+        const cpuTemp = data.cpu.temp_c;
+        if (cpuTemp !== null && cpuTemp !== undefined) {
+          document.getElementById('cpu-temp-val').innerText = `${cpuTemp}°C`;
+        } else {
+          document.getElementById('cpu-temp-val').innerText = '-- °C';
+        }
+
+        if (data.system) {
+          document.getElementById('cpu-cores-text').innerText = `${data.system.cpu_cores_physical}P / ${data.system.cpu_cores_logical}T`;
+        }
+
+        if (data.cpu.cores_percent) {
+          renderCores(data.cpu.cores_percent);
+        }
+      }
+
+      // GPU
+      if (data.gpu) {
+        document.getElementById('gpu-model-text').innerText = data.gpu.name || 'Standard GPU';
+        const gpuTemp = data.gpu.temp_c;
+        if (gpuTemp !== null && gpuTemp !== undefined) {
+          document.getElementById('gpu-temp-val').innerText = `${gpuTemp}°C`;
+          document.getElementById('gpu-tag').innerText = `${gpuTemp}°C`;
+          document.getElementById('bar-gpu').style.width = `${Math.min(100, (gpuTemp / 95) * 100)}%`;
+        } else {
+          document.getElementById('gpu-temp-val').innerText = 'Ready';
+          document.getElementById('gpu-tag').innerText = 'Ready';
+          document.getElementById('bar-gpu').style.width = '20%';
+        }
+
+        if (data.gpu.power_w) {
+          document.getElementById('gpu-power-val').innerText = `${data.gpu.power_w} W`;
+        }
+        if (data.gpu.core_clock_mhz) {
+          document.getElementById('gpu-clock-val').innerText = `${data.gpu.core_clock_mhz} MHz`;
+        }
+      }
+
+      // RAM
+      if (data.ram) {
+        const ramUsage = data.ram.percent || 0;
+        const rounded = Math.round(ramUsage);
+        document.getElementById('ram-percent').innerText = `${rounded}%`;
+        document.getElementById('ram-tag').innerText = `${rounded}%`;
+        document.getElementById('bar-ram').style.width = `${Math.min(100, Math.max(0, ramUsage))}%`;
+        
+        document.getElementById('ram-used-short').innerText = `${formatBytes(data.ram.used_bytes)}`;
+        document.getElementById('ram-used-full').innerText = `${formatBytes(data.ram.used_bytes)} / ${formatBytes(data.ram.total_bytes)}`;
+        document.getElementById('ram-avail-gb').innerText = formatBytes(data.ram.available_bytes);
+      }
+
+      // Network
+      if (data.network) {
+        const down = data.network.download_bps || 0;
+        const up = data.network.upload_bps || 0;
+        document.getElementById('net-down-val').innerText = formatSpeed(down);
+        document.getElementById('net-up-val').innerText = formatSpeed(up);
+        document.getElementById('net-total-recv').innerText = formatBytes(data.network.total_recv_bytes);
+
+        // Max bandwidth saturation calculation
+        const netSaturation = Math.min(100, Math.max(8, (down / (40 * 1024 * 1024)) * 100));
+        document.getElementById('bar-net').style.width = `${netSaturation}%`;
+
+        // Update Sparkline
+        downloadHistory.shift();
+        downloadHistory.push(down);
+        uploadHistory.shift();
+        uploadHistory.push(up);
+        drawNetworkCanvas();
+      }
+
+      // Disks
+      if (data.disk && data.disk.drives) {
+        renderDrives(data.disk.drives, data.disk.read_bps, data.disk.write_bps);
+      }
+
+      // Processes & Services
+      if (data.processes) {
+        rawProcesses = data.processes;
+        document.getElementById('proc-count-badge').innerText = rawProcesses.length;
+      }
+      if (data.services) {
+        rawServices = data.services.services || [];
+        document.getElementById('serv-count-badge').innerText = data.services.running_count || rawServices.length;
+      }
+      
+      onFilterChange(document.getElementById('filter-input').value);
+    }
+
+    // WebSocket Auto-Reconnect System
+    let ws = null;
+    let reconnectAttempts = 0;
+
+    function connectWebSocket() {
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const host = window.location.host || 'localhost:8989';
+      const wsUrl = `${protocol}//${host}/ws`;
+
+      ws = new WebSocket(wsUrl);
+
+      ws.onopen = () => {
+        reconnectAttempts = 0;
+        const ind = document.getElementById('ws-indicator');
+        if (ind) ind.classList.remove('disconnected');
+        document.getElementById('ws-label').innerText = 'LIVE · 1s';
+      };
+
+      ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          updateDashboard(data);
+          if (data.system) {
+            updateLanChips(data.system);
+          }
+        } catch (e) {
+          console.error("Telemetry parse exception:", e);
+        }
+      };
+
+      ws.onclose = () => {
+        const ind = document.getElementById('ws-indicator');
+        if (ind) ind.classList.add('disconnected');
+        document.getElementById('ws-label').innerText = 'RECONNECTING...';
+        const delay = Math.min(1000 * Math.pow(1.5, reconnectAttempts++), 10000);
+        setTimeout(connectWebSocket, delay);
+      };
+
+      ws.onerror = () => {
+        ws.close();
+      };
+    }
+
+    // Initial Snapshot
+    fetch('/api/snapshot')
+      .then(res => res.json())
+      .then(data => {
+        updateDashboard(data);
+        if (data.system) updateLanChips(data.system);
+      })
+      .catch(() => {});
+
+    // Boot WebSocket Connection
+    connectWebSocket();
+
+    // Canvas Resize Listener
+    window.addEventListener('resize', drawNetworkCanvas);
+  </script>
+</body>
+</html>
