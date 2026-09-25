@@ -45,6 +45,18 @@ logging.basicConfig(
 log = logging.getLogger("MetricsByJJ.Service")
 
 
+def get_python_exe() -> str:
+    exe = Path(sys.executable)
+    if "pythonservice" in exe.name.lower():
+        cand = Path(sys.prefix) / "python.exe"
+        if cand.exists():
+            return str(cand)
+        cand = exe.parent.parent / "python.exe"
+        if cand.exists():
+            return str(cand)
+    return sys.executable
+
+
 class MetricsByJJService(win32serviceutil.ServiceFramework):
     _svc_name_         = SERVICE_NAME
     _svc_display_name_ = SERVICE_DISPLAY
@@ -77,8 +89,9 @@ class MetricsByJJService(win32serviceutil.ServiceFramework):
         self._run()
 
     def _run(self):
+        python_bin = get_python_exe()
         cmd = [
-            sys.executable, "-m", "uvicorn",
+            python_bin, "-m", "uvicorn",
             "backend.main:app",
             "--host", "0.0.0.0",
             "--port", str(PORT),

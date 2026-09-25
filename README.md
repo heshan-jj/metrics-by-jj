@@ -22,21 +22,53 @@
 
 ---
 
-## 📦 Quick Start
+## 📦 1-Click Setup & Manager
 
-### 1. Launch with One Click
-Double-click [`start.bat`](file:///d:/Projects/metrics%20by%20jj/start.bat)
+Metrics by JJ includes a zero-PowerShell setup and management engine.
 
-*Or run from terminal:*
-```powershell
-pip install -r backend/requirements.txt
-python -m uvicorn backend.main:app --host 0.0.0.0 --port 8989
+### ⚡ Easy Setup (One-Click)
+Double-click **[`Setup.bat`](file:///d:/Projects/metrics%20by%20jj/Setup.bat)** in the project root.
+
+The setup utility automatically:
+1. Verifies Python 3.10+ in your environment
+2. Prompts for Administrator privileges (via Windows native UAC elevation, no PowerShell)
+3. Installs & updates all dependencies (`requirements.txt` + `pywin32`)
+4. Configures Windows Defender Firewall (Inbound TCP `8989`) via native `netsh`
+5. Registers **MetricsByJJ** as an automatic Windows Service
+6. Creates Start Menu and Desktop shortcuts with custom app icons
+7. Launches the dashboard in your default browser
+
+---
+
+## 🛠️ CLI & Manual Control
+
+You can also run commands directly or use the interactive manager menu:
+
+```cmd
+:: Open interactive setup & control menu
+Setup.bat
+
+:: Full automated install
+python setup.py --install
+
+:: Check live service status & LAN access URLs
+python setup.py --status
+
+:: Start or Stop the background service
+python setup.py --start
+python setup.py --stop
+
+:: Run in foreground console mode
+python setup.py --run
+
+:: Clean uninstall (removes service, firewall rule, and shortcuts)
+python setup.py --uninstall
 ```
 
-### 2. Access the Dashboard
+### 🌐 Accessing the Dashboard
 - **On this PC:** [`http://localhost:8989`](http://localhost:8989)
-- **On any other device on your Wi-Fi/LAN (Phone, Tablet, Laptop):**  
-  Open browser and go to `http://<YOUR_PC_IP>:8989` (e.g. `http://192.168.8.164:8989`).
+- **On any device on your Wi-Fi/LAN (Phone, Tablet, Laptop):**  
+  Open browser and go to `http://<YOUR_PC_IP>:8989` (e.g. `http://192.168.8.164:8989`). Run `python setup.py --status` to see all active LAN IP addresses.
 
 ---
 
@@ -52,14 +84,6 @@ To unlock per-core temperatures, GPU thermal sensors, and fan speeds:
 
 ---
 
-## 🛡️ Windows Firewall Note
-
-If other devices on your LAN cannot connect to `http://<YOUR_IP>:8989`:
-1. Open Windows Defender Firewall -> **Allow an app or feature through Windows Defender Firewall**.
-2. Ensure Python or Port `8989` (Inbound Rule) is allowed on **Private Networks**.
-
----
-
 ## 📐 Architecture
 
 ```
@@ -71,41 +95,15 @@ metrics-by-jj/
 │   └── requirements.txt # Python dependencies
 ├── frontend/
 │   └── index.html       # Single-file zero-dependency dark cockpit dashboard
-├── start.bat            # One-click Windows startup script
+├── installer/
+│   ├── metrics-jj.ico   # Application icon for Windows shortcuts
+│   └── metrics-jj.png   # High-res application logo
+├── Setup.bat            # 1-Click Master Setup & Manager Launcher
+├── setup.py             # Pure Python setup engine (zero PowerShell)
+├── service.py           # Windows Service wrapper
+├── start.bat            # Quick foreground launcher
 └── README.md
 ```
 
-
----
-
-## 🚀 Install as Windows Service
-
-The `installer/` folder contains everything needed to run Metrics by JJ as a **persistent Windows background service** that starts automatically at boot.
-
-### Requirements
-- Python 3.10+ in your `PATH`
-- Administrator privileges
-
-### Install
-Double-click **`installer/Install Metrics by JJ.bat`**
-
-This will:
-1. Install all Python dependencies (`requirements.txt` + `pywin32`)
-2. Register the **MetricsByJJ** Windows service
-3. Start the service (auto-starts on boot)
-4. Open firewall port 8989 for LAN access
-5. Add a Start Menu shortcut → `http://localhost:8989`
-
-### Uninstall
-Double-click **`installer/Uninstall Metrics by JJ.bat`**
-
-### Manual service control (Admin PowerShell)
-```powershell
-Start-Service MetricsByJJ
-Stop-Service MetricsByJJ
-Restart-Service MetricsByJJ
-Get-Service MetricsByJJ   # check status
-```
-
-### Logs
-Service output is written to `service.log` in the project root.
+### 📜 Service Logs
+Background service output is written to `service.log` in the project root.

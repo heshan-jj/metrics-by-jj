@@ -4,7 +4,14 @@ cls
 echo =======================================================
 echo           METRICS BY JJ - SYSTEM TELEMETRY HUB
 echo =======================================================
-echo.
+where python >nul 2>nul
+if %ERRORLEVEL% NEQ 0 (
+    echo [ERROR] Python is not found in your PATH.
+    echo Please install Python from https://www.python.org/
+    pause
+    exit /b 1
+)
+
 echo [*] Checking Python dependencies...
 python -m pip install -r backend\requirements.txt --quiet
 
