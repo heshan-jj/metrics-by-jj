@@ -74,3 +74,38 @@ metrics-by-jj/
 ├── start.bat            # One-click Windows startup script
 └── README.md
 ```
+
+
+---
+
+## 🚀 Install as Windows Service
+
+The `installer/` folder contains everything needed to run Metrics by JJ as a **persistent Windows background service** that starts automatically at boot.
+
+### Requirements
+- Python 3.10+ in your `PATH`
+- Administrator privileges
+
+### Install
+Double-click **`installer/Install Metrics by JJ.bat`**
+
+This will:
+1. Install all Python dependencies (`requirements.txt` + `pywin32`)
+2. Register the **MetricsByJJ** Windows service
+3. Start the service (auto-starts on boot)
+4. Open firewall port 8989 for LAN access
+5. Add a Start Menu shortcut → `http://localhost:8989`
+
+### Uninstall
+Double-click **`installer/Uninstall Metrics by JJ.bat`**
+
+### Manual service control (Admin PowerShell)
+```powershell
+Start-Service MetricsByJJ
+Stop-Service MetricsByJJ
+Restart-Service MetricsByJJ
+Get-Service MetricsByJJ   # check status
+```
+
+### Logs
+Service output is written to `service.log` in the project root.

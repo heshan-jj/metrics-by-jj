@@ -132,6 +132,51 @@
       transition: background-color 0.2s ease, color 0.2s ease;
     }
 
+    /* Compact inline info bar */
+    .info-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      padding: 0.5rem 0.9rem;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-main);
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+    .info-bar-sep { color: var(--border-dark); user-select: none; }
+    .info-bar a.notion-btn { padding: 0.2rem 0.55rem; font-size: 0.78rem; }
+
+    /* Fan speeds section */
+    .fans-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .fan-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-main);
+      border-radius: var(--radius-xs);
+      padding: 0.3rem 0.65rem;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+    .fan-chip .fan-rpm { color: var(--text-main); font-weight: 700; }
+
+    /* Drive temp badge */
+    .drive-temp-badge {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 600;
+      padding: 0.12rem 0.4rem;
+      border-radius: var(--radius-xs);
+    }
+
     /* Notion Custom Scrollbars */
     ::-webkit-scrollbar {
       width: 7px;
@@ -295,7 +340,7 @@
       max-width: 1440px;
       width: 100%;
       margin: 0 auto;
-      padding: 2.5rem 1.5rem 4rem 1.5rem;
+      padding: 1.5rem 1.5rem 3rem 1.5rem;
       display: flex;
       flex-direction: column;
       gap: 2rem;
@@ -413,6 +458,9 @@
 
     .notion-callout.hidden {
       display: none;
+    }
+    .info-bar.hidden {
+      display: none !important;
     }
 
     .callout-icon {
@@ -759,8 +807,14 @@
 
     .cores-bento {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: 0.6rem;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.55rem;
+    }
+    @media (max-width: 1100px) {
+      .cores-bento { grid-template-columns: repeat(4, 1fr); }
+    }
+    @media (max-width: 700px) {
+      .cores-bento { grid-template-columns: repeat(2, 1fr); }
     }
 
     .core-cell {
@@ -1067,76 +1121,38 @@
   </header>
 
   <main>
-    <!-- Notion Document Header -->
+    <!-- Compact Page Header -->
     <div class="notion-page-header">
-      <div class="page-icon-wrapper">
-        ⚡
-      </div>
-      <div class="page-title-group">
-        <h1 class="page-title">Metrics by JJ</h1>
-        <p class="page-subtitle">Real-time Windows telemetry engine, resource monitor & hardware performance hub.</p>
+      <div style="display:flex;align-items:baseline;gap:0.75rem;flex-wrap:wrap;">
+        <h1 class="page-title" style="font-size:1.75rem;">&#x26A1; Metrics by JJ</h1>
+        <span style="font-size:0.85rem;color:var(--text-muted);font-weight:400;">Private system telemetry</span>
       </div>
 
-      <!-- Notion Property Matrix Table -->
-      <div class="notion-properties">
-        <div class="property-item">
-          <span class="property-label">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-            Host Device
-          </span>
-          <span class="notion-tag tag-purple" id="meta-hostname">DESKTOP</span>
-        </div>
-
-        <div class="property-item">
-          <span class="property-label">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>
-            Operating System
-          </span>
-          <span class="notion-tag tag-blue" id="meta-os">Windows 11</span>
-        </div>
-
-        <div class="property-item">
-          <span class="property-label">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-            System Uptime
-          </span>
-          <span class="notion-tag tag-green" id="meta-uptime">0h 00m</span>
-        </div>
-
-        <div class="property-item">
-          <span class="property-label">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-            Network IP
-          </span>
-          <span class="notion-tag tag-orange" id="meta-primary-ip" style="cursor: pointer;" onclick="copyPrimaryUrl()" title="Click to copy primary URL">127.0.0.1</span>
+      <div class="info-bar">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+        <span class="notion-tag tag-purple" id="meta-hostname">DESKTOP</span>
+        <span class="info-bar-sep">&middot;</span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"></rect><rect x="9" y="9" width="6" height="6"></rect></svg>
+        <span class="notion-tag tag-blue" id="meta-os">Windows</span>
+        <span class="info-bar-sep">&middot;</span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        <span class="notion-tag tag-green" id="meta-uptime">0h 00m</span>
+        <span class="info-bar-sep">&middot;</span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10z"></path></svg>
+        <span class="notion-tag tag-orange" id="meta-primary-ip" style="cursor:pointer;" onclick="copyPrimaryUrl()" title="Click to copy">127.0.0.1</span>
+        <span class="info-bar-sep" style="margin-left:auto;">LAN:</span>
+        <div id="lan-chips" style="display:flex;gap:0.4rem;flex-wrap:wrap;">
+          <button class="lan-pill-btn" onclick="copyText(window.location.origin)">localhost:8989</button>
         </div>
       </div>
 
-      <!-- Hardware Sensor Detection Callout -->
-      <div class="notion-callout" id="lhm-banner">
-        <div class="callout-icon">💡</div>
-        <div class="callout-content">
-          <div class="callout-text">
-            <strong>Unlock Hardware Temperature Sensors:</strong> Run <b>LibreHardwareMonitor</b> in the background with WMI enabled to access per-core thermal probes and detailed GPU telemetry.
-          </div>
-          <a href="https://github.com/LibreHardwareMonitor/LibreHardwareMonitor/releases" target="_blank" class="notion-btn">
-            <span>Download Sensor Bridge ↗</span>
-          </a>
-        </div>
+      <div class="info-bar" id="lhm-banner" style="background:var(--tag-yellow-bg);color:var(--tag-yellow-text);">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <span><strong>Sensors not detected.</strong> Run LibreHardwareMonitor (WMI enabled) for CPU/GPU/disk temperatures.</span>
+        <a href="https://github.com/LibreHardwareMonitor/LibreHardwareMonitor/releases" target="_blank" class="notion-btn" style="margin-left:auto;">Get LHM &#x2197;</a>
       </div>
+    </div>
 
-      <!-- LAN URLs Access Popover Bar -->
-      <div class="notion-callout">
-        <div class="callout-icon">🌐</div>
-        <div class="callout-content">
-          <div class="callout-text">
-            <strong>LAN Access Links:</strong> View live metrics on your mobile phone, tablet, or secondary monitor:
-          </div>
-          <div class="lan-popover-box" id="lan-chips">
-            <button class="lan-pill-btn" onclick="copyText('http://localhost:8989')">http://localhost:8989</button>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- Notion Database View Tabs Bar -->
@@ -1306,14 +1322,26 @@
       <div class="notion-section">
         <div class="section-header">
           <div class="section-heading">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="15"></line><line x1="15" y1="9" x2="9" y2="15"></line></svg>
-            <span>Logical Cores Distribution</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect></svg>
+            <span>Logical Cores</span>
           </div>
           <span class="notion-tag tag-gray" id="core-count-label">0 Cores</span>
         </div>
         <div class="cores-bento" id="cores-container">
           <!-- Dynamic Core Tiles -->
         </div>
+      </div>
+
+      <!-- Fan Speeds Section (hidden until LHM active) -->
+      <div class="notion-section" id="fans-section" style="display:none;">
+        <div class="section-header">
+          <div class="section-heading">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 8a4 4 0 0 1 4 4"></path><path d="M8 12a4 4 0 0 1 4-4"></path><circle cx="12" cy="12" r="2"></circle></svg>
+            <span>Fan Speeds</span>
+          </div>
+          <span class="notion-tag tag-gray" id="fan-count-label">0 Fans</span>
+        </div>
+        <div class="fans-grid" id="fans-container"></div>
       </div>
 
       <!-- Storage & Real-Time Network Section -->
@@ -1640,6 +1668,9 @@
       document.getElementById('core-count-label').innerText = `${cores.length} Cores`;
     }
 
+    // disk temps cache (updated from hardware_bridge)
+    let diskTempsCache = [];
+
     function renderDrives(drives, readBps, writeBps) {
       const container = document.getElementById('drives-container');
       if (!container) return;
@@ -1660,24 +1691,56 @@
         const div = document.getElementById(`drive-${d.mountpoint.replace(/[^a-zA-Z0-9]/g, '_')}`);
         if (!div) return;
         const isHigh = d.percent > 90;
+
+        // Match disk temp by mountpoint letter
+        const letter = d.mountpoint.replace(':\\', '').replace('/', '').toUpperCase();
+        const tempMatch = diskTempsCache.find(t =>
+          t.name && (t.name.includes(letter + ':') || t.name.toLowerCase().includes(d.mountpoint.toLowerCase().replace('\\','').replace(':','').trim()))
+        ) || diskTempsCache[0]; // fallback to first disk temp if only one drive
+        const tempHtml = (tempMatch && diskTempsCache.length > 0)
+          ? `<span class="drive-temp-badge ${tempMatch.temp >= 55 ? 'tag-red' : tempMatch.temp >= 45 ? 'tag-orange' : 'tag-green'}"
+               style="background:var(--tag-${tempMatch.temp >= 55 ? 'red' : tempMatch.temp >= 45 ? 'orange' : 'green'}-bg);
+                      color:var(--tag-${tempMatch.temp >= 55 ? 'red' : tempMatch.temp >= 45 ? 'orange' : 'green'}-text);">
+               ${tempMatch.temp}°C</span>`
+          : '';
+
         div.innerHTML = `
           <div class="drive-row-top">
             <span class="drive-name">
-              <span>💾</span>
-              <span>${d.mountpoint}</span>
-              <span class="notion-tag tag-gray" style="font-size: 0.7rem;">${d.fstype || 'NTFS'}</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+              <strong>${d.mountpoint}</strong>
+              <span class="notion-tag tag-gray" style="font-size:0.69rem;">${d.fstype || 'NTFS'}</span>
+              ${tempHtml}
             </span>
-            <span class="drive-stats">${formatBytes(d.used_bytes)} / ${formatBytes(d.total_bytes)} (${d.percent}%)</span>
+            <span class="drive-stats">${formatBytes(d.used_bytes)} / ${formatBytes(d.total_bytes)}</span>
           </div>
-          <div class="progress-track" style="height: 6px;">
-            <div class="progress-fill ${isHigh ? 'fill-red' : 'fill-blue'}" style="width: ${d.percent}%;"></div>
+          <div class="progress-track" style="height:5px;">
+            <div class="progress-fill ${isHigh ? 'fill-red' : 'fill-blue'}" style="width:${d.percent}%;"></div>
           </div>
-          <div style="display: flex; justify-content: space-between; font-size: 0.76rem; color: var(--text-muted); font-family: var(--font-mono);">
+          <div style="display:flex;justify-content:space-between;font-size:0.74rem;color:var(--text-muted);font-family:var(--font-mono);">
             <span>Free: ${formatBytes(d.free_bytes)}</span>
-            <span>Used: ${d.percent}%</span>
+            <span>${d.percent}% used</span>
           </div>
         `;
       });
+    }
+
+    function renderFans(fans) {
+      const section = document.getElementById('fans-section');
+      const container = document.getElementById('fans-container');
+      const label = document.getElementById('fan-count-label');
+      if (!section || !container) return;
+      const activeFans = fans.filter(f => f.rpm > 0);
+      if (activeFans.length === 0) { section.style.display = 'none'; return; }
+      section.style.display = 'flex';
+      if (label) label.innerText = `${activeFans.length} Fan${activeFans.length > 1 ? 's' : ''}`;
+      container.innerHTML = activeFans.map(f => `
+        <div class="fan-chip">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+          <span>${escapeHtml(f.name)}</span>
+          <span class="fan-rpm">${f.rpm.toLocaleString()} RPM</span>
+        </div>
+      `).join('');
     }
 
     function renderProcesses(procs) {
@@ -1793,28 +1856,26 @@
       const container = document.getElementById('lan-chips');
       if (!container || !system.all_ips) return;
 
-      const port = window.location.port || (window.location.protocol === 'https:' ? '443' : '80');
-      let chipsHtml = `
-        <button class="lan-pill-btn" onclick="copyText('http://localhost:${port}')" title="Click to copy localhost URL">
-          <span>🖥️ localhost:${port}</span>
-        </button>
-      `;
+      const port = window.location.port || '8989';
+      const chips = [];
 
       if (system.primary_ip && system.primary_ip !== '127.0.0.1') {
         primaryLanUrl = `http://${system.primary_ip}:${port}`;
         document.getElementById('meta-primary-ip').innerText = system.primary_ip;
       }
 
-      system.all_ips.forEach(ipItem => {
+      // Only show non-loopback, non-APIPA IPs - keep it concise
+      const useful = system.all_ips.filter(ip =>
+        !ip.ip.startsWith('127.') && !ip.ip.startsWith('169.254') && !ip.ip.startsWith('172.19')
+      );
+
+      chips.push(`<button class="lan-pill-btn" onclick="copyText('http://localhost:${port}')">localhost:${port}</button>`);
+      useful.slice(0, 3).forEach(ipItem => {
         const url = `http://${ipItem.ip}:${port}`;
-        chipsHtml += `
-          <button class="lan-pill-btn" onclick="copyText('${url}')" title="Click to copy ${ipItem.interface}">
-            <span>🌐 ${ipItem.interface}: ${ipItem.ip}:${port}</span>
-          </button>
-        `;
+        chips.push(`<button class="lan-pill-btn" onclick="copyText('${url}')" title="${ipItem.interface}">${ipItem.ip}:${port}</button>`);
       });
 
-      container.innerHTML = chipsHtml;
+      container.innerHTML = chips.join('');
     }
 
     // Master Dashboard State Updater
@@ -1830,7 +1891,10 @@
         document.getElementById('meta-uptime').innerText = formatUptime(data.uptime_seconds);
       }
 
-      // Sensor Banner
+      // Sensor Banner + disk temps + fans
+      diskTempsCache = data.hardware_bridge?.disk_temps || [];
+      const fans = data.hardware_bridge?.fans || [];
+      renderFans(fans);
       const lhmActive = data.hardware_bridge?.lhm_active;
       const banner = document.getElementById('lhm-banner');
       if (banner && lhmActive) {

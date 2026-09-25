@@ -46,6 +46,7 @@ class HardwareBridge:
             "gpu_core_clock": None,
             "gpu_memory_clock": None,
             "gpu_power": None,
+            "disk_temps": [],
             "fans": [],
             "sensors_raw": []
         }
@@ -133,23 +134,40 @@ class HardwareBridge:
 
                 # Collect temperatures
                 if stype == "Temperature":
+                    ident_lower = ident.lower()
+                    name_lower = name.lower()
+
                     # CPU sensors
-                    if "/cpu/" in ident.lower() or "cpu" in name.lower():
-                        if "package" in name.lower():
+                    if "/cpu/" in ident_lower or "cpu" in name_lower:
+                        if "package" in name_lower:
                             package_temps.append(round(val, 1))
-                        elif "core" in name.lower() or "ccd" in name.lower() or "tdie" in name.lower():
+                        elif "core" in name_lower or "ccd" in name_lower or "tdie" in name_lower:
                             core_temps.append({"name": name, "temp": round(val, 1)})
                             all_cpu_temps.append(val)
                         else:
                             all_cpu_temps.append(val)
 
                     # GPU sensors
-                    elif "/gpu/" in ident.lower() or "gpu" in name.lower():
-                        if "core" in name.lower() or "gpu" in name.lower():
-                            if result["gpu_temp"] is None or "core" in name.lower():
+                    elif "/gpu/" in ident_lower or "gpu" in name_lower:
+                        if "core" in name_lower or "gpu" in name_lower:
+                            if result["gpu_temp"] is None or "core" in name_lower:
                                 result["gpu_temp"] = round(val, 1)
 
-                    # Motherboard / System
+                    # Disk / Storage sensors (HDD, SSD, NVMe)
+                    elif (
+                        "/hdd/" in ident_lower
+                        or "/ssd/" in ident_lower
+                        or "/nvme/" in ident_lower
+                        or "nvme" in name_lower
+                        or ("temperature" in name_lower and any(kw in name_lower for kw in ["hdd", "ssd", "disk", "storage", "drive", "ata", "nvme"]))
+                    ):
+                        result["disk_temps"].append({
+                            "name": name,
+                            "temp": round(val, 1),
+                            "id": ident
+                        })
+
+                    # Motherboard / System — always append to sensors_raw
                     result["sensors_raw"].append({
                         "name": name,
                         "type": stype,

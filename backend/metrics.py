@@ -275,6 +275,7 @@ class MetricsCollector:
             "hardware_bridge": {
                 "lhm_active": hw.get("lhm_active", False),
                 "fans": hw.get("fans", []),
+                "disk_temps": hw.get("disk_temps", []),
                 "sensors_raw": hw.get("sensors_raw", [])
             },
             "cpu": self._get_cpu_metrics(hw),
